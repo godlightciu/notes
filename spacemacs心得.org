@@ -116,6 +116,9 @@ SPC c C 编译程序
 **** 虚拟环境支持 
 ** 基本命令
 *** 帮助（h）
+M-x describe-variable, 快捷键 C-h v, 查看变量的文档
+M-x describe-function, 快捷键 C-h f, 查看命令的文档
+M-x describe-key, 快捷键 C-h k, 查看快捷键的文档
 *** 窗口(w) 
 **** 基本
  | SPC w -       | 上下拆分窗口                                  |
@@ -146,7 +149,7 @@ SPC c C 编译程序
 | SPC f r | 打开最近文件列表         |
 | SPC f y | 复制当前文件的绝对路径   |
 | SPC f c | 复制文件                   |
-*** buffer
+*** buffer(b)
 | SPC b b | 显示已经打开的 buffer           |
 | SPC b d | 关闭当前 buffer                 |
 | SPC b h | 进入 Spacemacs 初始界面         |
@@ -160,6 +163,25 @@ SPC c C 编译程序
 | SPC p b | 在当前 project 中查找打开的 buffer |
 | SPC p p | 切换到其他的 project               |
 | SPC /   | 在该项目中搜索字符串                         |
+*** 快速导航
+**** features
+***** find function definiton
+C-h f & C-h C-f
+***** find variable definition
+C-h v & C-h C-v
+***** 跳转functions 在当前文件中 
+helm-imenu函数
+SPC s j
+***** 打开你的 .spacemacs file 
+SPC f e d
+***** 打开 .emacs.d/init.el
+SPC f e i
+***** 查找spacemas layers,and package所有文档
+SPC h SPC 
+**** 导航spacemacs layers/docs
+SPC h SPC -> SPC s j -> c-h c-f/c-v/f/v
+**** 导航 elpa libraies
+ 
 *** shell
 | SPC '(单引号)         | 打开/关闭 Shell           |
 | C-k 前一条 shell 命令 | 相当于在 shell 中按上箭头 |
