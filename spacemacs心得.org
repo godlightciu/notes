@@ -178,10 +178,13 @@ SPC f e d
 SPC f e i
 ***** 查找spacemas layers,and package所有文档
 SPC h SPC 
-**** 导航spacemacs layers/docs
-SPC h SPC -> SPC s j -> c-h c-f/c-v/f/v
-**** 导航 elpa libraies
- 
+**** 工作流
+***** 导航spacemacs layers/docs
+ SPC h SPC -> SPC s j -> c-h c-f/c-v/f/v
+***** 导航.spacemacs.d
+SPC f e d-> SPC s j -> c-h c-f/c-v/f/v
+***** 导航.emacs.d
+SPC f e i-> SPC s j -> c-h c-f/c-v/f/v
 *** shell
 | SPC '(单引号)         | 打开/关闭 Shell           |
 | C-k 前一条 shell 命令 | 相当于在 shell 中按上箭头 |
@@ -308,6 +311,12 @@ file:C:\Users\light\Desktop\UI\images.jpg
 | C-c ^          | 根据当前列排序，可以选择排序方式           |
 
 [[www.zmonster.me/2016/06/03/org-mode-table.html][表格教程]]
+**** 标签
+c-c c-q 为当前标题插入标签
+c-c c-c 当光标在某标题栏时，为该标题插入标签
+c-c \ 用来查找某个tag下的所有项目
+c-c / m 建立符合某tag的sparse tree
+c-c a m 从所有agenda file里建立符合某tag的全局性列表
 **** 编辑公式  
 M-x org-entities-help :查看完整的entities
 ***** latex
@@ -443,6 +452,26 @@ start{equation} end{equation}
 ******* docx
   [[https://github.com/jgm/pandoc/releases][pandoc]]
   [[https://pandoc.org/MANUAL.html][pandoc文档]]
+*** GTD实践  
+**** 快捷键  
+| M-S-RET          | org-insert-todo-heading |
+| c-c a            | org-agenda              |
+| c-c a t          | 查看所有的任务          |
+| c-c c            | org-capture             |
+| c-c c-c          | 为任务添加标签          |
+| c-c c-t          | 改变任务状态            |
+| c-c c-s          | 输入schedule时间        |
+| c-c c-d          | 添加deadline时间        |
+| c-c \            | 标签搜索表达式          |
+| S-UP/DOWN        | 调整任务的优先级        |
+| 标题后插入[%][/] | 追踪子标题的完成情况    |
+| , q              | org-refile重新定位      |
+**** org-agneda查看每日任务
+1. C-c a进入org-agenda
+2. a 进入每日、每周任务
+3. 默认展示的是一周内每天的任务，按d进入当天任务，按w返回每周任务
+4. 按R (注意大写)查看当天每个任务的完成时间情况
+5. 按r 刷新状态
 ** dired-mode
 ** magit
 *** magit-clone
