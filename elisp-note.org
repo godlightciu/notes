@@ -1,0 +1,6 @@
+
+* elisp
+** sexps:sybolic experessions
+** evaluate sexps :C-j
+** setq
+stores a value into a variable

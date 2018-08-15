@@ -1,0 +1,71 @@
+* requests.get()
+#+BEGIN_SRC
+import requests
+param = {"wd": "莫烦 Python"}  # 搜索的信息
+r = requests.get('http://www.baidu.com/s', params=param)
+print(r.url)
+#+END_SRC
+
+* requests.post()
+
+** 普通 post 请求
+ #+BEGIN_SRC
+ data = {'firstname': '莫烦', 'lastname': '周'}
+ r = requests.post('http://pythonscraping.com/files/processing.php', data=data)
+ print(r.text)
+
+ # Hello there, 莫烦 周!
+
+ #+END_SRC
+
+** 上传图片（文件）
+ #+BEGIN_SRC
+ file = {'uploadFile': open('./image.png', 'rb')}
+ r = requests.post('http://pythonscraping.com/files/processing2.php', files=file)
+ print(r.text)
+
+ # The file image.png has been uploaded.
+
+ #+END_SRC
+
+** 登录
+#+BEGIN_SRC
+payload = {'username': 'Morvan', 'password': 'password'}
+r = requests.post('http://pythonscraping.com/pages/cookies/welcome.php', data=payload)
+print(r.cookies.get_dict())
+
+# {'username': 'Morvan', 'loggedin': '1'}
+
+
+r = requests.get('http://pythonscraping.com/pages/cookies/profile.php', cookies=r.cookies)
+print(r.text)
+
+# Hey Morvan! Looks like you're still logged into the site!
+
+#+END_SRC
+
+
+* requests 下载
+import requests
+print "downloading with requests"
+url = '//www.jb51.net/test/demo.zip'
+r = requests.get(url)
+with open("demo3.zip", "wb") as code:
+   code.write(r.content)
+
+* requests.Session()保持会话
+保持登录状态
+#+BEGIN_SRC
+session = requests.Session()
+payload = {'username': 'Morvan', 'password': 'password'}
+r = session.post('http://pythonscraping.com/pages/cookies/welcome.php', data=payload)
+print(r.cookies.get_dict())
+
+# {'username': 'Morvan', 'loggedin': '1'}
+
+
+r = session.get("http://pythonscraping.com/pages/cookies/profile.php")
+print(r.text)
+
+# Hey Morvan! Looks like you're still logged into the site!
+#+END_SRC

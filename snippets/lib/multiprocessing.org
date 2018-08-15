@@ -1,0 +1,74 @@
+*  线程和进程创建
+
+#+BEGIN_SRC
+import multiprocessing as mp
+import threading as td
+
+def job(a,d):
+    print('aaaaa')
+
+t1 = td.Thread(target=job,args=(1,2))
+p1 = mp.Process(target=job,args=(1,2))
+t1.start()
+p1.start()
+t1.join()
+p1.join()
+
+#+END_SRC
+
+#+BEGIN_SRC
+def multi_process():
+    base_url = "https://www.bilibili.com/anime/index/#season_version=-1&area=-1&is_finish=-1&copyright=-1&season_status=-1&season_month=-1&pub_date=-1&style_id=-1&order=4&st=1&sort=0&page={}"
+    start = time.time()
+    p = mp.Pool()
+    for i in range(1,5):
+        url = base_url.format(i)
+        p.apply_async(crawl_process,args=(url,))
+        time.sleep(2)
+    p.close()
+    p.join()
+    end = time.time()
+    print('ALL crawl_jobs done!')
+    print(end-start)
+#+END_SRC
+
+* 多线程分布式爬虫举例
+#+BEGIN_SRC
+import multiprocessing as mp
+import time
+from urllib.request import urlopen, urljoin
+from bs4 import BeautifulSoup
+import re
+
+# base_url = "http://127.0.0.1:4000/"
+base_url = 'https://morvanzhou.github.io/'
+
+def crawl(url):
+    response = urlopen(url)
+    # time.sleep(0.1)             # slightly delay for downloading
+    return response.read().decode()
+
+
+def parse(html):
+    soup = BeautifulSoup(html, 'lxml')
+    urls = soup.find_all('a', {"href": re.compile('^/.+?/$')})
+    title = soup.find('h1').get_text().strip()
+    page_urls = set([urljoin(base_url, url['href']) for url in urls])   # 去重
+    url = soup.find('meta', {'property': "og:url"})['content']
+    return title, page_urls, url
+
+pool = mp.Pool(4)
+while len(unseen) != 0:
+    # htmls = [crawl(url) for url in unseen]
+    # --->
+    crawl_jobs = [pool.apply_async(crawl, args=(url,)) for url in unseen]
+    htmls = [j.get() for j in crawl_jobs]
+
+    # results = [parse(html) for html in htmls]
+    # --->
+    parse_jobs = [pool.apply_async(parse, args=(html,)) for html in htmls]
+    results = [j.get() for j in parse_jobs]
+
+    ...
+
+#+END_SRC

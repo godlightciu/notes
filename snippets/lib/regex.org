@@ -1,0 +1,27 @@
+* re.search(pattern, str)
+如果找到了结果, 它会返回一个 match 的 object； 如果没有匹配到, 它会返回 None
+ #+BEGIN_SRC
+#返回 object
+ptn = r"r[au]n"
+print(re.search(ptn, "dog runs to cat"))    # <_sre.SRE_Match object; span=(4, 7), match='run'>
+
+#分组匹配
+match = re.search(r"(?P<id>\d+), Date: (?P<date>.+)", "ID: 021523, Date: Feb/12/2017")
+print(match.group('id'))                # 021523
+print(match.group('date'))              # Date: Feb/12/2017
+ #+END_SRC
+* re.findall(pattern, str)
+找到全部的匹配项，然后返回一个列表
+print(re.findall(r"r[ua]n", "run ran ren"))
+* re.sub(pattern, str1, str2)
+通过正则表达式匹配上一些形式的字符串然后再替代掉这些字符串
+print(re.sub(r"r[au]ns", "catches", "dog runs to cat"))     # dog catches to cat
+* re.split(pattern, string)
+把分割做得淋漓尽致
+print(re.split(r"[,;\.]", "a;b,c.d;e"))     # ['a', 'b', 'c', 'd', 'e']
+* re.compile(str)
+使用 compile 过后的正则, 来对这个正则重复使用.加快匹配速度
+#+BEGIN_SRC
+compiled_re = re.compile(r"r[ua]n")
+print(compiled_re.search("dog ran to cat"))  # <_sre.SRE_Match object; span=(4, 7), match='ran'>
+#+END_SRC

@@ -1,0 +1,1540 @@
+* Data science
+综合 goal：
+1. 我们从 web 取回大数据集(spider)
+2. 然后把他们存在本地的数据库(db)
+3. 然后我们从数据库中进行数据分析(data_analyse)
+4. 取出数据,并可视化
+** 爬虫技术栈
+
+*** 所爬平台
+*** 搜寻 URL 策略
+*** 发出请求
+**** Request
+[[http://cn.python-requests.org/zh_CN/latest/][request 中文文档]]
+[[./snippets/lib/requests.org]]
+
+*** 解析网页
+**** BeautifulSoup
+[[https://www.crummy.com/software/BeautifulSoup/bs4/doc/index.zh.html][beautirfulsoup 文档]]
+**** 正则表达式 (Regular Expression)
+[[https://www.cnblogs.com/huxi/archive/2010/07/04/1771073.html][正则表达式入门指南]]
+正则表达式, 它能用简单的规则匹配到多样化的文本信息.
+
+RegEx 常被用在很多方面, 比如网页爬虫, 文稿整理, 数据筛选等等.
+
+[[https://images.cnblogs.com/cnblogs_com/huxi/Windows-Live-Writer/Python_10A67/pyre_ebb9ce1c-e5e8-4219-a8ae-7ee620d5f9f1.png][正则表达式小抄]]
+[[./snippets/lib/regex.org]]
+**** xpath
+*** 工作流
+
+**** Selenium
+***** 简介
+ [[http://selenium-python.readthedocs.io/][selenium-python 文档]]
+ Selenium 是为了测试而出生的. 但是没想到到了爬虫的年代, 它摇身一变, 变成了爬虫的好工具. 让我试着用一句话来概括 Seleninm: 它能控制你的浏览器, 有模有样地学人类”看”网页.这句话总结得特别好。
+ 可以运行一个非常强大的网络爬虫，它可以处理 cookie、JavaScrip、click 事件，以及判断网站上某些动作是否发生
+
+ 什么时候会要用到 Selenium 呢? 当你:
+ - 发现用普通方法爬不到想要的内容
+ - 网站跟你玩”捉迷藏”, 太多 JavaScript 内容
+ - 需要像人一样浏览的爬虫
+
+ webdrive 是 selenium 很重要的一个函数：
+ #+BEGIN_SRC
+ from selenium import webdriver
+ driver = webdriver.PhantomJS()
+ driver.get('网址')
+ #+END_SRC
+ 其中 PhantomJS 同时可以换成 Chrome、Firefox、Ie 等等，但是 PhantomJS 是一个无头的浏览器，运行是不会跳出相应的浏览器，运行相对效率较高。在调试中可以先换成 Chrome，方便调试，最后再换成 PhantomJS 即可。
+
+
+ 总结：Selenium 的优点便是 可以很方便模拟人的操作, 添加其它操作也是非常容易的, 但是也是有缺点的, 打开浏览器需要加载更多东西,它的执行速度不够快快. 所以如果对速度有要求, 能不用 Selenium 尽量不用
+**** PhantomJS（放弃维护状态！）
+谨慎学习--
+PhantomJS 是一个基于 webkit 的 JavaScript API。它使用 QtWebKit 作为它核心浏览器的功能，使用 webkit 来编译解释执行 JavaScript 代码。任何你可以在基于 webkit 浏览器做的事情，它都能做到。它不仅是个隐形的浏览器，提供了诸如 CSS 选择器、支持 Web 标准、DOM 操作、JSON、HTML5、Canvas、SVG 等，同时也提供了处理文件 I/O 的操作，从而使你可以向操作系统读写文件等。PhantomJS 的用处可谓非常广泛，诸如前端无界面自动化测试（需要结合 Jasmin）、网络监测、网页截屏等。
+
+
+*** 数据库
+
+**** JSON
+JSON(JavaScript Object Notation, JS 对象标记) 是一种轻量级的数据交换格式。JSON 的数据格式其实就是 python 里面的字典格式，里面可以包含方括号括起来的数组，也就是 python 里面的列表。
+***** json.dumps
+ 将 Python 对象编码成 JSON 字符串
+#+BEGIN_SRC
+a = {"name":"Tom", "age":23}
+with open("test.json", "w", encoding='utf-8') as f:
+    # indent 超级好用，格式化保存字典，默认为 None，小于 0 为零个空格
+    f.write(json.dumps(a, indent=4))
+    # json.dump(a,f,indent=4)   # 和上面的效果一样
+
+#+END_SRC
+*****  json.loads
+将已编码的 JSON 字符串解码为 Python 对象
+#+BEGIN_SRC
+#!/usr/bin/python
+import json
+
+jsonData = '{"a":1,"b":2,"c":3,"d":4,"e":5}';
+
+text = json.loads(jsonData)
+print text
+#+END_SRC
+**** SQL 语句
+**** pymysql/mysqldb
+DB-API 是一个规范. 它定义了一系列必须的对象和数据库存取方式, 以便为各种各样的底层数据库系统和多种多样的数据库接口程序提供一致的访问接口 。
+
+Python 的 DB-API，为大多数的数据库实现了接口，使用它连接各数据库后，就可以用相同的方式操作各数据库。
+
+Python DB-API 使用流程：
+1. 引入 API 模块。
+2. 获取与数据库的连接。
+3. 执行 SQL 语句和存储过程。
+4. 关闭数据库连接。
+
+[[./snippets/lib/pymysql.org]]
+**** 数据库的选择
+
+***** 关系型 DB
+
+***** 非关系型 DB
+
+*** 数据处理
+
+**** 数据清洗
+
+**** 数据可视化
+
+*** 抗反爬技术
+
+**** 封 ip -- ip 池
+
+**** 登录/身份验证
+***** 验证码
+
+***** cookie 保持登录状态
+
+
+*** 爬取速度
+python 把 multiprocessing 和 threading 的使用方法做的几乎差不多
+**** 多进程分布式爬虫 multiprocessing
+[[./snippets/lib/multiprocessing.org]]
+
+**** 多线程 threading
+**** 异步加载 asyncio
+原理：在单线程里使用异步计算, 下载网页的时候和处理网页的时候是不连续的, 更有效利用了等待下载的这段时间.
+
+***** async,await 弄懂它们两个如何协同工作是关键
+
+ 单线程，是在 Python 的功能间切换着执行. 切换的点用 await 来标记, 能够异步的功能用 async 标记, 比如 async def function():.
+
+ #+BEGIN_SRC
+ import asyncio
+
+
+ async def job(t):                   # async 形式的功能
+     print('Start job ', t)
+     await asyncio.sleep(t)          # 等待 "t" 秒, 期间切换其他任务
+     print('Job ', t, ' takes ', t, ' s')
+
+
+ async def main(loop):                       # async 形式的功能
+     tasks = [
+     loop.create_task(job(t)) for t in range(1, 3)
+     ]                                       # 创建任务, 但是不执行
+     await asyncio.wait(tasks)               # 执行并等待所有任务完成
+
+ t1 = time.time()
+ loop = asyncio.get_event_loop()             # 建立 loop
+ loop.run_until_complete(main(loop))         # 执行 loop
+ loop.close()                                # 关闭 loop
+ print("Async total time : ", time.time() - t1)
+
+ """
+ Start job  1
+ Start job  2
+ Job  1  takes  1  s
+ Job  2  takes  2  s
+ Async total time :  2.001495838165283
+ """
+
+ #+END_SRC
+
+
+***** requests 模块替换成异步的 aiohttp
+原来的：
+#+BEGIN_SRC
+import requests
+
+URL = 'https://morvanzhou.github.io/'
+
+
+def normal():
+    for i in range(2):
+        r = requests.get(URL)
+        url = r.url
+        print(url)
+
+t1 = time.time()
+normal()
+print("Normal total time:", time.time()-t1)
+
+"""
+https://morvanzhou.github.io/
+https://morvanzhou.github.io/
+Normal total time: 0.3869960308074951
+"""
+#+END_SRC
+现在的：
+#+BEGIN_SRC
+import aiohttp
+
+
+async def job(session):
+    response = await session.get(URL)       # 等待并切换
+    return str(response.url)
+
+
+async def main(loop):
+    async with aiohttp.ClientSession() as session:      # 官网推荐建立 Session 的形式
+        tasks = [loop.create_task(job(session)) for _ in range(2)]
+        finished, unfinished = await asyncio.wait(tasks)
+        all_results = [r.result() for r in finished]    # 获取所有结果
+        print(all_results)
+
+t1 = time.time()
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main(loop))
+loop.close()
+print("Async total time:", time.time() - t1)
+
+"""
+['https://morvanzhou.github.io/', 'https://morvanzhou.github.io/']
+Async total time: 0.11447715759277344
+"""
+
+#+END_SRC
+** Database
+ structured data structure : to read or wirte fast
+*** SQL
+**** CRUD
+***** create
+  #+BEGIN_SRC sql
+  CREATE TABLE Users(
+  name VARCHAR(128),
+  email VARCHAR(128))
+  #+END_SRC
+***** retrieve
+  #+BEGIN_SRC sql
+  SELECT * FROM Users WHERE email='godlight@sun.edu'
+  SELECT * FROM Users ORDER BY name
+  SELECT * FROM Users ORDER BY email DESC LIMIT 10
+
+  SELECT COUNT(*) FROM Users
+  #+END_SRC
+***** update
+****** insert
+  #+BEGIN_SRC sql
+  INSERT INTO Users(name,email) VALUES ('godlight', 'godlight@sun.edu')
+
+  #+END_SRC
+****** update
+  #+BEGIN_SRC sql
+  UPDATE Users SET name='Charles' WHERE email='godlight@sun.edu'
+
+  #+END_SRC
+***** delete
+  #+BEGIN_SRC sql
+  DELETE FROM Users WHERE email='godlight@sun.edu'
+
+  DROP TABLE IF EXISTS Users
+  #+END_SRC
+***** join
+ #+BEGIN_SRC sql
+ SELECT Track.title, Artist.name, Album.title, Genre.name
+     FROM Track JOIN Genre JOIN Album JOIN Artist
+     ON Track.genre_id = Genre.ID and Track.album_id = Album.id
+         AND Album.artist_id = Artist.id
+     ORDER BY Artist.name LIMIT 3
+ #+END_SRC
+*** DBA
+**** cursor
+***** cursor.commit()
+如果每次对数据库进行修改时就将结果提交到数据库，因此处理所有数据可能需要较长的时间。提交始终坚持在每次调用时将所有数据写入磁盘。
+
+通过在循环外部移动提交操作，可以大大加速程序。在任何数据库程序中，在提交之间执行的操作数与不丢失尚未提交的操作结果的重要性之间存在平衡
+*** Data Model
+ [[C:\Users\light\Desktop\notes\snippets\code3\tracks\tracks.py]]
+**** Designing a Data Model
+***** 介绍
+   数据存储在数据库中：Many tables connected together
+   基本机制：schma and contract
+   Really important and complex 得益于多年来巧妙的工程设计以确保应用程序运行良好
+   说来也简单，就是由一些列，和一些连接组成
+   集中于：
+   1. 专注的表
+   2. 如何使它们连接起来
+***** 步骤
+****** 为我们的应用程序，绘制量身定制的数据库图
+****** 搞清楚如何表示数据，以及它们的关系
+***** 基本规则:
+****** 相同的字符串数据不要用两次，而是用关系来代替
+****** 与现实世界直接相关联的，独立使用一张表
+***** 实操
+  我们要做的只是连接各个表，并用小资料来增强它们
+****** 数字音乐曲目（用户界面）->该 app 是用于管理曲目的东西！
+   | track | len | artist | album | genre | rating | count |
+   |-------+-----+--------+-------+-------+--------+-------|
+   |       |     |        |       |       |        |       |
+****** 建立数据模型
+   对于我们要支持的这个用户界面，我们如何能够建立一个好的数据模型呢
+   我们建立好我们的数据模型，然后构建用户想要的程序和界面
+****** 对于每条信息,是新的对象，还是已有对象的属性：
+   - 列是对象，还是对象的属性
+   - 一旦声明新的对象，我们就要定义该对象和其他对象的关系
+****** 从哪里开始
+   对于应用程序来说最重要的东西什么？应用程序的核心功能是什么？
+   用一句话来描述应用程序，实现怎样的逻辑功能？ -- 该 app 是用于管理曲目的东西！
+
+   因此我们从 track（曲目开始），首先建立曲目表
+   一旦建立了曲目表，那么我们必须看看其他所有的东西。
+   ->找出曲目的属性，建立一张表
+******  接下来要绘制什么呢
+  曲目 belongs to 专辑，专辑 belongs to 艺术家
+****** 最后一个问题
+  曲风连接到哪里
+  曲风连接到曲目，比较合理
+**** Representing a Data Model
+  我们取整个数据模型和添加这些 key 来模拟箭头的开始和结束
+  不断重复，绘制完整的数据库图，将每个数据表连接起来了！
+***** primary key
+  id
+  not null
+  auto_increment
+  箭头的终点
+
+***** Foreign key
+  箭头的起点
+***** Logical key
+  唯一
+  在 where/order by 语句会用到它
+***** go
+  #+BEGIN_SRC sql
+
+  CREATE TABLE Artist(
+  id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT UNIQUE,
+  name TEXT  )
+
+  CREATE TABLE Album(
+  id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT UNIQUE,
+  artist_id INTEGER,
+  title TEXT  )
+
+  CREATE TABLE Gnere(
+  id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT UNIQUE,
+  name TEXT  )
+
+  CREATE TABLE Track(
+  id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT UNIQUE,
+  title TEXT,
+  album_id INTEGER,
+  genre_id INTEGER,
+  len INTEGER,ranting INTEGER,count INTEGER  )
+  #+END_SRC
+**** Inserting a Relation Data
+**** Reconstrucing Data with JOIN
+ JOIN 操作能够在几个数据表之间建立连接
+ 必须告诉 JOIN 如何使用 keys 进行数据表之间的连接
+ #+BEGIN_SRC sql
+ select Album.title,Artist.name from Album join Artist on Album.artist_id=Artist.id
+
+ select Track.titlel,Album.title,Artist.name,Genre_name from Track join Genre join  Album join Artist on Track.genre_id = Genre.id and Track.album_id = Album.id and Album.artist_id=Artist.id
+ #+END_SRC
+*** Many-to-Many Relationships
+ [[C:\Users\light\Desktop\notes\snippets\code3\roster\roster.py]]
+
+** 数据处理
+*** Data mining
+*** Analyze
+**** why numpy pandas
+  [[https://morvanzhou.github.io/tutorials/data-manipulation/np-pd/][莫凡 python_pandas 教程]]
+
+     两个科学运算中最为重要的模块，numpy 和 pandas，任何关于数据分析的模块都少不了它们两个
+   应用：
+   - 数据分析
+   - 机器学习
+   - 深度学习
+   优势：
+   - 运算速度快：numpy 和 pandas 都是采用 C 语言编写, pandas 又是基于 numpy, 是 numpy 的升级版本。
+   - 消耗资源少：采用的是矩阵运算，会比 python 自带的字典或者列表快好多
+**** numpy
+***** numpy 属性
+  - ndim:维度
+  - shape:行数和列数
+  - size：元素个数
+  #+BEGIN_SRC
+  array = numpy.array([[1,2,3],[2,3,4]])
+
+  print('number of dim:',array.ndim)  # 维度
+  # number of dim: 2
+
+  print('shape :',array.shape)    # 行数和列数
+  # shape : (2, 3)
+
+  print('size:',array.size)   # 元素个数
+  # size: 6
+  #+END_SRC
+***** 创建 array
+****** array
+****** dtype:指定数据类型
+  #+BEGIN_SRC a = np.array([2,23,4],dtype=np.int)
+  print(a.dtype)
+  # int 64
+
+  a = np.array([2,23,4],dtype=np.int32)
+  print(a.dtype)
+  # int32
+
+  a = np.array([2,23,4],dtype=np.float)
+  print(a.dtype)
+  # float64
+
+  a = np.array([2,23,4],dtype=np.float32)
+  print(a.dtype)
+  # float32
+
+  #+END_SRC
+****** zeros：创建数据全为 0
+  #+BEGIN_SRC
+  a = np.zeros((3,4)) # 数据全为 0，3 行 4 列
+  """
+  array([[ 0.,  0.,  0.,  0.],
+         [ 0.,  0.,  0.,  0.],
+         [ 0.,  0.,  0.,  0.]])
+  """
+
+  #+END_SRC
+****** ones：创建数据全为 1
+  #+BEGIN_SRC
+  a = np.ones((3,4),dtype = np.int)   # 数据为 1，3 行 4 列
+  """
+  array([[1, 1, 1, 1],
+         [1, 1, 1, 1],
+         [1, 1, 1, 1]])
+  """
+
+  #+END_SRC
+****** empty：创建全空数组，其中每个数据接近 0
+  #+BEGIN_SRC
+  a = np.empty((3,4)) # 数据为 empty，3 行 4 列
+  """
+  array([[  0.00000000e+000,   4.94065646e-324,   9.88131292e-324,
+            1.48219694e-323],
+         [  1.97626258e-323,   2.47032823e-323,   2.96439388e-323,
+            3.45845952e-323],
+         [  3.95252517e-323,   4.44659081e-323,   4.94065646e-323,
+            5.43472210e-323]])
+  """
+
+  #+END_SRC
+****** arrange：按指定范围创建数据
+  #+BEGIN_SRC
+  a = np.arange(10,20,2) # 10-19 的数据，2 步长
+  """
+  array([10, 12, 14, 16, 18])
+  """
+
+  #+END_SRC
+****** linspace：创建线段型数据
+  #+BEGIN_SRC
+  a = np.linspace(1,10,20)    # 开始端 1，结束端 10，且分割成 20 个数据，生成线段
+  """
+  array([  1.        ,   1.47368421,   1.94736842,   2.42105263,
+           2.89473684,   3.36842105,   3.84210526,   4.31578947,
+           4.78947368,   5.26315789,   5.73684211,   6.21052632,
+           6.68421053,   7.15789474,   7.63157895,   8.10526316,
+           8.57894737,   9.05263158,   9.52631579,  10.        ])
+  """
+
+  #+END_SRC
+****** random
+******* randint
+#+BEGIN_SRC python
+In [538]: t = np.random.randint(0,10,(4,3))
+In [578]: t
+Out[578]:
+array([[8, 1, 2],
+       [4, 6, 0],
+       [7, 9, 2],
+       [8, 7, 5]])
+
+
+#+END_SRC
+******* normal
+#+BEGIN_SRC python
+In [579]: t = np.random.normal(0,10,30)
+In [601]: t
+Out[601]:
+array([ -3.63288978, -13.00573403, -11.36096457,  -4.48866617,
+        -0.71255222,   8.94922765,   4.916084  ,  -0.22997257,
+         6.82839903, -19.15781871,  -2.57778482,   3.28678253,
+       -21.41116628,   4.46168121,  -5.29428804,  -0.53727617,
+         5.4717391 ,  -7.10101023, -10.86914239,  -3.79553307,
+        -4.66915545, -12.21514425,  -1.56386798, -24.9895874 ,
+       -21.78704122,   0.09812707, -14.26213438,  -2.78171207,
+        -7.49870989,  -4.80790997])
+
+
+
+#+END_SRC
+****** reshape 工作(对矩阵的形状进行重构，变成多维矩阵)
+     #+BEGIN_SRC
+     a = np.linspace(1,10,20).reshape((5,4)) # 更改 shape
+     """
+     array([[  1.        ,   1.47368421,   1.94736842,   2.42105263],
+            [  2.89473684,   3.36842105,   3.84210526,   4.31578947],
+            [  4.78947368,   5.26315789,   5.73684211,   6.21052632],
+            [  6.68421053,   7.15789474,   7.63157895,   8.10526316],
+            [  8.57894737,   9.05263158,   9.52631579,  10.        ]])
+     """
+
+     #+END_SRC
+****** vstack
+#+BEGIN_SRC python
+import numpy as np
+p = np.ones([2,3],int)
+return np.vstack([p, 2*p])
+
+#+END_SRC
+
+#+RESULTS:
+| 1 | 1 | 1 |
+| 1 | 1 | 1 |
+| 2 | 2 | 2 |
+| 2 | 2 | 2 |
+
+****** hstack
+#+BEGIN_SRC python
+
+import numpy as np
+p = np.ones([2,3],int)
+return np.hstack([p, 2*p])
+
+#+END_SRC
+
+#+RESULTS:
+| 1 | 1 | 1 | 2 | 2 | 2 |
+| 1 | 1 | 1 | 2 | 2 | 2 |
+
+***** numpy 基础运算
+  #+BEGIN_SRC
+  让我们从一个脚本开始了解相应的计算以及表示形式 ：
+  import numpy as np
+  a=np.array([10,20,30,40])   # array([10, 20, 30, 40])
+  b=np.arange(4)              # array([0, 1, 2, 3])
+
+  #+END_SRC
+****** 基本运算
+   #+BEGIN_SRC
+   c=a-b  # array([10, 19, 28, 37])
+   c=a+b   # array([10, 21, 32, 43])
+   c=a*b   # array([  0,  20,  60, 120])
+   c=b**2  # array([0, 1, 4, 9])乘方
+   #+END_SRC
+****** 函数应用
+  #+BEGIN_SRC
+  c=10*np.sin(a)
+  # array([-5.44021111,  9.12945251, -9.88031624,  7.4511316 ])
+
+  print(b<3)
+  # array([ True,  True,  True, False], dtype=bool)进行逻辑判断
+
+  #+END_SRC
+****** 其他运算
+*******  元素对应相乘
+   #+BEGIN_SRC
+   c_dot = np.dot(a,b)
+   # array([[2, 4],
+   #       [2, 3]])
+
+   c_dot_2 = a.dot(b)
+   # array([[2, 4],
+   #       [2, 3]])
+
+   #+END_SRC
+
+******* 矩阵内求和，最小值，最大值
+  #+BEGIN_SRC
+  np.sum(a)
+  np.min(a)
+  np.max(a)
+
+  np.argmin(a)#最小值对应的索引值
+  np.argmax(a)#最大值对应的索引值
+
+  np.sum(a,axis=1)#以行作为查找单元
+  np.sum(a,axis=0)#以列作为查找单元
+  #+END_SRC
+
+******* 平均值，中位数
+  #+BEGIN_SRC
+  #平均值
+  np.mean(a)
+  np.average(a)
+  a.mean()
+
+  #中位数
+  a.median()
+
+  #+END_SRC
+
+******* 累加函数
+  生成的每一项矩阵元素均是从原矩阵首项累加到对应项的元素之和。
+  #+BEGIN_SRC
+  print(a)
+  # array([[ 2, 3, 4, 5]
+  #        [ 6, 7, 8, 9]
+  #        [10,11,12,13]])
+
+  print(np.cumsum(a))
+  # [2 5 9 14 20 27 35 44 54 65 77 90]
+
+  #累差函数
+  #该函数计算的便是每一行中后一项与前一项之差。
+  print(np.diff(a))
+  # [[1 1 1]
+  #  [1 1 1]
+  #  [1 1 1]]
+
+  #+END_SRC
+
+***** numpy 索引与切片
+****** Indexing
+ #+BEGIN_SRC
+ In [327]: s = np.arange(13)**2
+ In [343]: s
+ Out[346]:
+ array([  0,   1,   4,   9,  16,  25,  36,  49,  64,  81, 100, 121, 144],
+       dtype=int32)
+
+ In [347]: s[0], s[4], s[0:3], s[-4:]
+ Out[386]:
+ (0,
+  16,
+  array([0, 1, 4], dtype=int32),
+  array([ 81, 100, 121, 144], dtype=int32))
+
+ #+END_SRC
+****** sliding
+******* 基本
+ #+BEGIN_SRC python
+ In [430]: r = np.arange(36).reshape((6,6))
+ In [434]: r
+ Out[434]:
+ array([[ 0,  1,  2,  3,  4,  5],
+        [ 6,  7,  8,  9, 10, 11],
+        [12, 13, 14, 15, 16, 17],
+        [18, 19, 20, 21, 22, 23],
+        [24, 25, 26, 27, 28, 29],
+        [30, 31, 32, 33, 34, 35]])
+
+ In [435]: r[2,2]
+ Out[444]: 14
+
+ In [445]: r[3,3:6]
+ Out[457]: array([21, 22, 23])
+
+ In [458]: r[-1, ::2]
+ Out[467]: array([30, 32, 34])
+
+ In [468]: r[:2, :-1]
+ Out[480]:
+ array([[ 0,  1,  2,  3,  4],
+        [ 6,  7,  8,  9, 10]])
+
+ In [481]: r[r>30]
+ Out[493]: array([31, 32, 33, 34, 35])
+
+
+
+ #+END_SRC
+******* 可以赋值
+#+BEGIN_SRC python
+In [494]: r2 = r[:3, :3]
+
+In [513]: r2
+Out[513]:
+array([[ 0,  1,  2],
+       [ 6,  7,  8],
+       [12, 13, 14]])
+
+In [514]: r2[:] = 1
+
+In [533]: r2
+Out[536]:
+array([[1, 1, 1],
+       [1, 1, 1],
+       [1, 1, 1]])
+
+In [537]: r
+Out[537]:
+array([[ 1,  1,  1,  3,  4,  5],
+       [ 1,  1,  1,  9, 10, 11],
+       [ 1,  1,  1, 15, 16, 17],
+       [18, 19, 20, 21, 22, 23],
+       [24, 25, 26, 27, 28, 29],
+       [30, 31, 32, 33, 34, 35]])
+
+
+#+END_SRC
+
+***** numpy copy & deep copy
+****** 创建副本
+r_copy = r.copy
+***** 遍历
+
+***** code snippets
+#+BEGIN_SRC python
+In [1]: import numpy as np
+
+In [17]: x = np.array([1,2,3])
+In [48]: x
+Out[48]: array([1, 2, 3])
+
+In [49]: y = np.array([4,5,6],[7,8,9])
+In [100]: y.shape
+Out[106]: (2, 3)
+
+In [167]: x = np.arange(0,30,2)
+In [168]: x
+Out[171]: array([ 0,  2,  4,  6,  8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28])
+In [172]: x.reshape(3,5)
+Out[187]:
+array([[ 0,  2,  4,  6,  8],
+       [10, 12, 14, 16, 18],
+       [20, 22, 24, 26, 28]])
+
+In [240]: np.ones((3,2))
+Out[249]:
+array([[1., 1.],
+       [1., 1.],
+       [1., 1.]])
+
+In [250]: np.zeros((2,3))
+Out[265]:
+array([[0., 0., 0.],
+       [0., 0., 0.]])
+
+In [266]: np.diag(x)
+Out[278]:
+array([[ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
+       [ 0,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
+       [ 0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
+       [ 0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
+       [ 0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
+       [ 0,  0,  0,  0,  0, 10,  0,  0,  0,  0,  0,  0,  0,  0,  0],
+       [ 0,  0,  0,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0],
+       [ 0,  0,  0,  0,  0,  0,  0, 14,  0,  0,  0,  0,  0,  0,  0],
+       [ 0,  0,  0,  0,  0,  0,  0,  0, 16,  0,  0,  0,  0,  0,  0],
+       [ 0,  0,  0,  0,  0,  0,  0,  0,  0, 18,  0,  0,  0,  0,  0],
+       [ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 20,  0,  0,  0,  0],
+       [ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 22,  0,  0,  0],
+       [ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 24,  0,  0],
+       [ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 26,  0],
+       [ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 28]])
+
+In [279]: np.array([1,2,3] * 3)
+Out[306]: array([1, 2, 3, 1, 2, 3, 1, 2, 3])
+
+#+END_SRC
+**** pandas
+  Numpy 和 Pandas 有什么不同
+  如果用 python 的列表和字典来作比较, 那么可以说 Numpy 是列表形式的，没有数值标签，而 Pandas 就是字典形式。Pandas 是基于 Numpy 构建的，让 Numpy 为中心的应用变得更加简单。
+  [[http://pandas.pydata.org/pandas-docs/version/0.18.1/visualization.html][pandas 文档]]
+***** Series 和 DataFrame:主要的数据结构
+
+****** Series
+   #+BEGIN_SRC
+   import pandas as pd
+   import numpy as np
+   s = pd.Series([1,3,6,np.nan,44,1])
+
+   print(s)
+   """
+   0     1.0
+   1     3.0
+   2     6.0
+   3     NaN
+   4    44.0
+   5     1.0
+   dtype: float64
+   """
+
+   #+END_SRC
+
+****** DataFrame
+   #+BEGIN_SRC
+   dates = pd.date_range('20160101',periods=6)
+   df = pd.DataFrame(np.random.randn(6,4),index=dates,columns=['a','b','c','d'])
+
+   print(df)
+   """
+                      a         b         c         d
+   2016-01-01 -0.253065 -2.071051 -0.640515  0.613663
+   2016-01-02 -1.147178  1.532470  0.989255 -0.499761
+   2016-01-03  1.221656 -2.390171  1.862914  0.778070
+   2016-01-04  1.473877 -0.046419  0.610046  0.204672
+   2016-01-05 -1.584752 -0.700592  1.487264 -1.778293
+   2016-01-06  0.633675 -1.414157 -0.277066 -0.442545
+   """
+
+   #+END_SRC
+   DataFrame 是一个表格型的数据结构，它包含有一组有序的列，每列可以是不同的值类型（数值，字符串，布尔值等）。DataFrame 既有行索引也有列索引， 它可以被看做由 Series 组成的大字典。
+
+   我们可以根据每一个不同的索引来挑选数据, 比如挑选 b 的元素:
+  #+BEGIN_SRC
+  print(df['b'])
+
+  """
+  2016-01-01   -2.071051
+  2016-01-02    1.532470
+  2016-01-03   -2.390171
+  2016-01-04   -0.046419
+  2016-01-05   -0.700592
+  2016-01-06   -1.414157
+  Freq: D, Name: b, dtype: float64
+  """
+
+  #+END_SRC
+
+***** 可视化
+
+****** plot 绘图
+   数据可视化
+   #+BEGIN_SRC
+   import pandas as pd
+   import numpy as np
+   import matplotlib.pyplot as plt
+
+   #+END_SRC
+
+   - Series 可视化
+   #+BEGIN_SRC # 随机生成 1000 个数据
+   data = pd.Series(np.random.randn(1000),index=np.arange(1000))
+
+   # 为了方便观看效果, 我们累加这个数据
+   data.cumsum()
+
+   # pandas 数据可以直接观看其可视化形式
+   data.plot()
+
+   plt.show()
+
+   #+END_SRC
+
+   - Dataframe 可视化
+   我们生成一个 1000*4 的 DataFrame，并对他们累加
+   #+BEGIN_SRC
+   data = pd.DataFrame(
+       np.random.randn(1000,4),
+       index=np.arange(1000),
+       columns=list("ABCD")
+       )
+   data.cumsum()
+   data.plot()
+   plt.show()
+
+   #+END_SRC
+
+   - 使用 x,y 绘图
+   #+BEGIN_SRC
+   In [8]: df3 = pd.DataFrame(np.random.randn(1000, 2), columns=['B', 'C']).cumsum()
+
+   In [9]: df3['A'] = pd.Series(list(range(len(df))))
+
+   In [10]: df3.plot(x='A', y='B')
+   Out[10]: <matplotlib.axes._subplots.AxesSubplot at 0x11684fb10>
+
+   #+END_SRC
+
+****** other
+  - bar
+  - hist
+  - box
+  - kde
+  - area
+  - scatter
+  - hexbin
+
+  主要说一下 scatter. 因为 scatter 只有 x，y 两个属性，我们我们就可以分别给 x, y 指定数据
+  #+BEGIN_SRC
+  ax = data.plot.scatter(x='A',y='B',color='DarkBlue',label='Class1')
+
+  # 将之下这个 data 画在上一个 ax 上面
+  data.plot.scatter(x='A',y='C',color='LightGreen',label='Class2',ax=ax)
+  plt.show()
+  #+END_SRC
+
+*** visualization
+**** python 可视化工具
+***** matplotlib
+****** 基础用法
+******* why matplotlib
+     1. Matplotlib 是一个非常强大的 Python 画图工具;
+     2. 手中有很多数据, 可是不知道该怎么呈现这些数据.
+     所以就找到了 Matplotlib. 它能帮你画出美丽的:
+    - 线图;
+    - 散点图;
+    - 等高线图;
+    - 条形图;
+    - 柱状图;
+    - 3D 图形,
+    - 甚至是图形动画等等.
+******* 基本用法
+    #+BEGIN_SRC
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    #使用 np.linspace 定义 x：范围是(-1,1);个数是 50.
+    x = np.linspace(-1, 1, 50)
+    y = 2*x + 1
+
+    plt.figure() #定义一个图像窗口
+    plt.plot(x,y)
+    plt.show
+    #+END_SRC
+******** figure 图像
+     #+BEGIN_SRC
+     简单的线条
+     import matplotlib.pyplot as plt
+     import numpy as np
+
+     x = np.linspace(-3, 3, 50)
+     y1 = 2*x + 1
+     y2 = x**2
+
+     plt.figure(num=3, figsize=(8, 5),) #定义一个图像窗口：编号为 3，大小为(8,5)
+     plt.plot(x, y2)
+     plt.plot(x, y1, color='red', linewidth=1.0, linestyle='--')
+     plt.show()
+     #+END_SRC
+******* 设置坐标轴
+******** 设置坐标轴的范围，单位长度，替代文字等等
+    #+BEGIN_SRC python
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    x = np.linspace(-3, 3, 50)
+    y1 = 2*x + 1
+    y2 = x**2
+
+    plt.figure()
+    plt.plot(x, y2)
+    plt.plot(x, y1, color='red', linewidth=1.0, linestyle='--')
+
+    plt.xlim((-1, 2))  #设置 x 坐标轴范围（-1，2）
+    plt.ylim((-2, 3))  #设置 y 坐标轴范围(-2,,3)
+    plt.xlabel('I am x')#设置 x 坐标轴名称
+    plt.ylabel('I am y')#设置 y 坐标轴名称
+    plt.show()
+
+    #重新设置 x 轴刻度
+    new_ticks = np.linspace(-1, 2, 5) #范围是(-1,2)，个数是 5
+    print(new_ticks)
+    plt.xticks(new_ticks)
+
+    #重新设置 y 轴刻度和名称
+    plt.yticks([-2, -1.8, -1, 1.22, 3],[r'$really\ bad$', r'$bad$', r'$normal$', r'$good$', r'$really\ good$'])
+    plt.show()
+    #+END_SRC
+******** 移动坐标轴的位置
+     #+BEGIN_SRC python :session :results file
+     import matplotlib.pyplot as plt
+     import numpy as np
+
+     x = np.linspace(-3, 3, 50)
+     y1 = 2*x + 1
+     y2 = x**2
+
+     plt.figure()
+     plt.plot(x, y2)
+     plt.plot(x, y1, color='red', linewidth=1.0, linestyle='--')
+     plt.xlim((-1, 2))
+     plt.ylim((-2, 3))
+
+     new_ticks = np.linspace(-1, 2, 5)
+     plt.xticks(new_ticks)
+     plt.yticks([-2, -1.8, -1, 1.22, 3],['$really\ bad$', '$bad$', '$normal$', '$good$', '$really\ good$'])
+
+     ax = plt.gca() #获取当前坐标轴的信息
+     ax.spines['right'].set_color('none') #设置边框：右边框,set_color 设置颜色，默认为 white
+     ax.spines['top'].set_color('none')   #设置边框：上边框
+     plt.show()
+     plt.savefig('./python-matplot-try.png')
+     return './python-matplot-try.png'
+     #+END_SRC
+
+
+     #+BEGIN_SRC
+       #设置 x 坐标轴刻度数字或名称的位置（top,bottom,both,default,none）
+     ax.xaxis.set_ticks_position('bottom')
+
+     #spines 设置边框：x 轴
+     #使用 set_position 设置边框位置：y = 0 的位置(位置所有属性：outward,axes,data)
+     ax.spines['bottom'].set_position(('data', 0))
+     plt.show()
+
+
+     #设置 y 坐标轴刻度数字或名称的位置（left,right,both,default,none）
+     ax.yaxis.set_ticks_position('left')
+
+     #spines 设置边框：y 轴
+     #使用 set_position 设置边框位置：x = 0 的位置(位置所有属性：outward,axes,data)
+     ax.spines['left'].set_position(('data',0))
+     plt.show()
+
+     #+END_SRC
+
+******* Legend 图例
+******** 添加图例
+    legend 图例就是为了帮我们展示出每个数据对应的图像名称. 更好的让读者认识到你的数据结构.
+    坐标轴设置的代码
+    #+BEGIN_SRC
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    x = np.linspace(-3, 3, 50)
+    y1 = 2*x + 1
+    y2 = x**2
+
+    plt.figure()
+    #set x limits
+    plt.xlim((-1, 2))
+    plt.ylim((-2, 3))
+
+    # set new sticks
+    new_sticks = np.linspace(-1, 2, 5)
+    plt.xticks(new_sticks)
+    # set tick labels
+    plt.yticks([-2, -1.8, -1, 1.22, 3],
+               [r'$really\ bad$', r'$bad$', r'$normal$', r'$good$', r'$really\ good$'])
+
+    #+END_SRC
+
+    本节中我们将对图中的两条线绘制图例，首先我们设置两条线的类型等信息（蓝色实线与红色虚线).
+    #+BEGIN_SRC
+    # set line syles
+    l1, = plt.plot(x, y1, label='linear line')
+    l2, = plt.plot(x, y2, color='red', linewidth=1.0, linestyle='--', label='square line')
+
+    #+END_SRC
+    legend 将要显示的信息来自于上面代码中的 label. 所以我们只需要简单写下一下代码, plt 就能自动的为我们添加图例.
+    #+BEGIN_SRC
+    plt.legend(loc='upper right')
+
+    #+END_SRC
+******** 调整位置和名称
+    如果我们想单独修改之前的 label 信息, 给不同类型的线条设置图例信息. 我们可以在 plt.legend 输入更多参数. 如果以下面这种形式添加 legend, 我们需要确保:
+    1. 在上面的代码 plt.plot(x, y2, label='linear line') 和 plt.plot(x, y1, label='square line') 中有用变量 l1 和 l2 分别存储起来
+    2. 而且需要注意的是 l1, l2,要以逗号结尾, 因为 plt.plot() 返回的是一个列表.
+    #+BEGIN_SRC python
+    plt.legend(handles=[l1, l2], labels=['up', 'down'],  loc='best')
+
+    '''loc 参数有很多种
+     'best' : 0,
+     'upper right'  : 1,
+     'upper left'   : 2,
+     'lower left'   : 3,
+     'lower right'  : 4,
+     'right'        : 5,
+     'center left'  : 6,
+     'center right' : 7,
+     'lower center' : 8,
+     'upper center' : 9,
+     'center'       : 10,
+    '''
+    #+END_SRC
+******* Annotation 标注
+    1. 画出基本图
+    #+BEGIN_SRC python
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    x = np.linspace(-3, 3, 50)
+    y = 2*x + 1
+
+    plt.figure(num=1, figsize=(8, 5),)
+    plt.plot(x, y,)
+
+    #+END_SRC
+
+    2. 挪动坐标轴位置
+    #+BEGIN_SRC python
+    ax = plt.gca()
+    ax.spines['right'].set_color('none')
+    ax.spines['top'].set_color('none')
+    ax.xaxis.set_ticks_position('bottom')
+    ax.spines['bottom'].set_position(('data', 0))
+    ax.yaxis.set_ticks_position('left')
+    ax.spines['left'].set_position(('data', 0))
+
+    #+END_SRC
+
+    3. 然后标注出(x0, y0)位置信息，
+    #+BEGIN_SRC python
+    x0 = 1
+    y0 = 2*x0 + 1
+    plt.plot([x0, x0,], [0, y0,], 'k--', linewidth=2.5)
+    # set dot styles
+    plt.scatter([x0, ], [y0, ], s=50, color='b')
+
+    #+END_SRC
+    4. 添加注释 annote
+    #+BEGIN_SRC python
+    plt.annotate(r'$2x+1=%s$' % y0, xy=(x0, y0), xycoords='data', xytext=(+30, -30),
+                 textcoords='offset points', fontsize=16,
+                 arrowprops=dict(arrowstyle='->', connectionstyle="arc3,rad=.2"))
+
+    #+END_SRC
+    其中参数 xycoords='data'是说基于数据的值来选位置，xytext=(+30, -30)和 textcords='offset points'对于标注位置的描述和 xy 偏差值，arrowprops 是对图中箭头类型的一些设置
+    [[https://morvanzhou.github.io/static/results/plt/2_6_4.png][效果图]]
+
+    5. 添加注释 text
+    #+BEGIN_SRC python
+    plt.text(-3.7, 3, r'$This\ is\ the\ some\ text. \mu\ \sigma_i\ \alpha_t$',
+             fontdict={'size': 16, 'color': 'r'})
+    #其中-3,7,3 是选取 text 的位置，空格需要用到转字符\,fontdict 设置文本字体
+    #+END_SRC
+******* Scatter 散点图
+    #+BEGIN_SRC python
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    n = 1024    # data size
+    X = np.random.normal(0, 1, n) # 每一个点的 X 值,平均数是 0，方差为 1
+    Y = np.random.normal(0, 1, n) # 每一个点的 Y 值
+    T = np.arctan2(Y,X) # for color value
+
+    #size=75,颜色为 T，color map 用默认值，透明度 alpha 为 50%
+    plt.scatter(X, Y, s=75, c=T, alpha=.5)
+
+    plt.xlim(-1.5, 1.5) #x 轴显示范围定位为(-1.5, 1.5)
+    plt.xticks(())  # ignore xticks 隐藏 x 坐标轴
+    plt.ylim(-1.5, 1.5)
+    plt.yticks(())  # ignore yticks
+
+    plt.show()
+    #+END_SRC
+    [[https://morvanzhou.github.io/static/results/plt/3_1_1.png][result]]
+******* Bar 条形柱状图
+    今天的柱状图分成上下两部分，每一个柱体上都有相应的数值标注，并且取消坐标轴的显示。
+    [[https://morvanzhou.github.io/static/results/plt/3_2_1.png][效果图]]
+    1. 生成基本图形
+    向上向下分别生成 12 个数据，X 为 0 到 11 的整数 ，Y 是相应的均匀分布的随机数据。 使用的函数是 plt.bar，参数为 X 和 Y：
+    #+BEGIN_SRC python
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    n = 12
+    X = np.arange(n)
+    Y1 = (1 - X / float(n)) * np.random.uniform(0.5, 1.0, n)
+    Y2 = (1 - X / float(n)) * np.random.uniform(0.5, 1.0, n)
+
+    plt.bar(X, +Y1)
+    plt.bar(X, -Y2)
+
+    plt.xlim(-.5, n)
+    plt.xticks(())
+    plt.ylim(-1.25, 1.25)
+    plt.yticks(())
+
+    plt.show()
+
+    #+END_SRC
+
+    2. 加颜色和数据
+    #+BEGIN_SRC python
+    #facecolor 设置主题颜色，edgecolor 设置边框颜色为白色
+    plt.bar(X, +Y1, facecolor='#9999ff', edgecolor='white')
+    plt.bar(X, -Y2, facecolor='#ff9999', edgecolor='white')
+
+    #+END_SRC
+
+    3. 接下来我们用函数 plt.text 分别在柱体上方（下方）加上数值，用%.2f 保留两位小数，横向居中对齐 ha='center'，纵向底部（顶部）对齐 va='bottom'：
+    #+BEGIN_SRC python
+    for x, y in zip(X, Y1):
+        # ha: horizontal alignment 水平对齐
+        # va: vertical alignment 垂直对齐
+        plt.text(x + 0.4, y + 0.05, '%.2f' % y, ha='center', va='bottom')
+
+    for x, y in zip(X, Y2):
+        # ha: horizontal alignment
+        # va: vertical alignment
+        plt.text(x + 0.4, -y - 0.05, '%.2f' % y, ha='center', va='top')
+
+    #+END_SRC
+******* 画等高线图
+******* Image 图片
+    [[https://morvanzhou.github.io/static/results/plt/3_4_1.png]]
+    #+BEGIN_SRC python
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    a = np.array([0.313660827978, 0.365348418405, 0.423733120134,
+                  0.365348418405, 0.439599930621, 0.525083754405,
+                  0.423733120134, 0.525083754405, 0.651536351379]).reshape(3,3)
+    # origin='lower'代表的就是选择的原点的位置
+    # 'nearest'是其中一种出图方式
+    plt.imshow(a, interpolation='nearest', cmap='bone', origin='lower')
+
+    #添加一个 colorbar，其中添加 shrink 参数，使 colorbar 的长度变短为原来的 92%
+    plt.colorbar(shrink=.92)
+
+    plt.xticks(())
+    plt.yticks(())
+    plt.show(
+    #+END_SRC
+******* 3D 数据
+
+    #+BEGIN_SRC python
+    import numpy as np
+    imprt matplotlib.pyplot as plt
+    from mpl_toolkits.mplot3d imprt Axes3D
+
+    fig = plt.figure()
+    ax = Axes3D(fig) #在窗口上添加 3D 坐标轴
+
+    # X, Y value
+    X = np.arange(-4, 4, 0.25)
+    Y = np.arange(-4, 4, 0.25)
+    X, Y = np.meshgrid(X, Y)    # x-y 平面的网格
+    R = np.sqrt(X ** 2 + Y ** 2)
+    # height value
+    Z = np.sin(R)
+
+    #colormap.rainbow 填充颜色
+    #其中 rstride 和 cstride 分别代表 row 和 column 的跨度
+    ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=plt.get_cmap('rainbow'))
+
+    #添加 XY 平面的等高线
+    ax.contourf(X, Y, Z, zdir='z', offset=-2, cmap=plt.get_cmap('rainbow'))
+    #+END_SRC
+******* paper 中常见的图表
+******** Subplot 多合一显示
+******** Subplot 分格显示
+******** 图中图
+******** 次坐标轴
+******* Animation 动画
+******* org-mode
+
+    [[https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-python.html]]
+    是否要 session 决定了是否要 return
+******** running python code block
+       C-c C-c : execute the code
+
+       #+HEADER: :var print_this="org mode code-block example output"
+       #+BEGIN_SRC python :results output code  :export results
+       print('hello world!')
+       print(print_this)
+
+       #+END_SRC
+
+
+       #+RESULTS:
+       #+BEGIN_SRC python
+       hello world!
+       org mode code-block example output
+       #+END_SRC
+******** Table Example
+******** Plot Example
+     #+BEGIN_SRC python   :results file :export results
+     import matplotlib.pyplot as plt
+     import numpy as np
+
+     x = np.linspace(-3, 3, 50)
+     y1 = 2*x + 1
+     y2 = x**2
+
+     plt.figure()
+     plt.plot(x, y2)
+     plt.plot(x, y1, color='red', linewidth=1.0, linestyle='--')
+     plt.xlim((-1, 2))
+     plt.ylim((-2, 3))
+
+     new_ticks = np.linspace(-1, 2, 5)
+     plt.xticks(new_ticks)
+     plt.yticks([-2, -1.8, -1, 1.22, 3],['$really\ bad$', '$bad$', '$normal$', '$good$', '$really\ good$'])
+
+     ax = plt.gca() #获取当前坐标轴的信息
+     ax.spines['right'].set_color('none') #设置边框：右边框,set_color 设置颜色，默认为 white
+     ax.spines['top'].set_color('none')   #设置边框：上边框
+     plt.savefig('./resources/python-matplot-try.png')
+     return './resources/python-matplot-try.png'
+     #+END_SRC
+
+     #+RESULTS:
+     [[file:./python-matplot-try.png]]
+****** 实例
+******* 样式和坐标
+******** 设置图表的线型、属性和格式化字符串
+   #+BEGIN_SRC python
+
+   import matplotlib.pyplot as plt
+   import numpy as np
+
+   x = np.linspace(-np.pi, np.pi, 256, endpoint=True)
+   y = np.cos(x)
+   y1= np.sin(x)
+
+   #线段颜色，线条风格，线条宽度，线条标记，标记的边缘颜色，标记边缘宽度，标记内颜色，标记大小
+   plt.plot([1,2],color='r',linestyle='-',linewidth=2, marker='D', mec='g',mew=2, mfc='b',ms=30)
+   plt.plot(x,y1)
+
+   #图表名称
+   plt.title("Functions $\sin$ and $\cos$")
+
+   #x,y 轴坐标范围
+   plt.xlim(-3,3)
+   plt.ylim(-1,4)
+
+   #坐标上刻度
+   plt.xticks([-np.pi, -np.pi/2,0,np.pi/2,np.pi],
+          [r'$-\pi$', r'$-\pi/2$', r'$0$', r'$+\pi/2$',r'$+\pi$'])
+   plt.yticks([-1, 0, 1],
+          [r'$-1$',r'$0$',r'$+1$' ])
+
+   plt.grid()
+   plt.show()
+
+   #+END_SRC
+
+   #+RESULTS:
+   : None
+******** 设置坐标刻度和位置（见基本用法）
+******** 添加图例和注释
+   #+BEGIN_SRC python
+   import  matplotlib.pyplot as plt
+   import numpy as np
+
+   x1 = np.random.normal(30,2,100)
+   plt.plot(x1, label='plot')
+
+   #图例??
+   #图标的起始位置，宽度，高度 归一化坐标
+   #loc 可选，为了图标不覆盖图
+   #ncol 图例个数
+   #图例平铺
+   #坐标轴和图例边界之间的间距
+   plt.legend(bbox_to_anchor=(0., 1.02, 1., .102),loc = 4,
+          ncol=1, mode="expand",borderaxespad=0.1)
+
+   #注解
+   # Import data 注释
+   #（55,30） 要关注的点
+   #xycoords = ‘data’ 注释和数据使用相同坐标系
+   #xytest 注释的位置
+   #arrowprops 注释用的箭头
+   plt.annotate("Import data", (55,30), xycoords='data',
+                  xytext=(5,35),
+                  arrowprops=dict(arrowstyle='->'))
+
+
+
+   plt.show()
+   #+END_SRC
+
+   #+RESULTS:
+   : None
+******* 技巧
+******** 使用 subplots
+  #+BEGIN_SRC python
+  import matplotlib.pyplot as plt
+  import numpy as np
+
+  plt.figure(0)
+  #子图的分割规划
+  a1 = plt.subplot2grid((3,3),(0,0),colspan=3)
+  a2 = plt.subplot2grid((3,3),(1,0),colspan=2)
+  a3 = plt.subplot2grid((3,3),(1,2),colspan=1)
+  a4 = plt.subplot2grid((3,3),(2,0),colspan=1)
+  a5 = plt.subplot2grid((3,3),(2,1),colspan=2)
+
+
+
+  all_axex = plt.gcf().axes
+  for ax in all_axex:
+      for ticklabel in ax.get_xticklabels() + ax.get_yticklabels():
+          ticklabel.set_fontsize(10)
+
+  plt.suptitle("Demo")
+  plt.show()
+
+  #+END_SRC
+
+  #+RESULTS:
+  : None
+******** 填充图表底层区域
+  #+BEGIN_SRC python
+  import matplotlib.pyplot as plt
+  import numpy as np
+  from math import sqrt
+
+  t = range(1000)
+  y = [sqrt(i) for i in t]
+
+  plt.plot(t,y,color='r',lw=2)
+  plt.fill_between(t,y,color='y')
+
+  plt.show()
+
+  #+END_SRC
+
+  #+RESULTS:
+  : None
+******* 柱状图，线行图，堆积柱状图/plot,bar,barh
+  #+BEGIN_SRC python
+  import matplotlib.pyplot as plt
+
+  #data
+  x = [1,2,3,4,5,6]
+  y = [3,4,6,7,3,2]
+
+  plt.figure()
+
+  #折线图
+  plt.subplot(2,3,1)
+  plt.plot(x,y)
+
+  #柱状图
+  plt.subplot(2,3,2)
+  plt.bar(x,y)
+
+  #水平柱状图
+  plt.subplot(2,3,3)
+  plt.barh(x,y)
+
+  #叠加柱状图
+  plt.subplot(2,3,4)
+  plt.bar(x,y)
+  y1 = [2,3,4,5,6,7]
+  plt.bar(x,y1,bottom=y,color='red')
+
+  #箱线图
+  plt.subplot(2,3,5)
+  plt.boxplot(x)
+
+  #散点图
+  plt.subplot(2,3,6)
+  plt.scatter(x,y)
+  plt.show()
+
+
+  #+END_SRC
+
+  #+RESULTS:
+  : None
+******* 直方图
+  #+BEGIN_SRC python
+  import matplotlib.pyplot as plt
+
+  dataset = [1,3,5,7,8,3,4,5,6,7,1,2,34,3,4,4,5,6,3,2,2,3,4,5,6,7,4,3]
+
+  plt.figure()
+  plt.hist(dataset)
+  plt.show()
+
+  #+END_SRC
+
+  #+RESULTS:
+  : None
+******* 饼图
+  #+BEGIN_SRC python
+  import pylab
+
+  pylab.figure(1,figsize=(6,6))
+
+  #ax = pylab.axes([0.1,0.1,0.8,0.8])
+  labels = 'spring','summer','artumn','winter'
+  x = [15,30,45,10]
+  explode = (0.1,0,0,0)
+
+  pylab.pie(x, explode=explode, labels=labels, autopct='%1.1f%%', startangle=67)
+  pylab.title('rainy days by season')
+  pylab.show()
+
+  #+END_SRC
+
+  #+RESULTS:
+  : None
+******* 散点图
+  #+BEGIN_SRC python
+  import matplotlib.pyplot as plt
+  import numpy as np
+
+  x = np.random.randn(1000)
+  y1 = np.random.randn(len(x))
+  y2 = 1.8 + np.exp(x)
+
+  ax1 = plt.subplot(1,2,1)
+  ax1.scatter(x,y1,color='r',alpha=.3,edgecolors='white',label='no correl')
+  plt.xlabel('no correlation')
+  plt.grid(True)
+  plt.legend()
+
+  ax1 = plt.subplot(1,2,2)
+  #alpha 透明度 edgecolors 边缘颜色 label 图例（结合 legend 使用）
+  plt.scatter(x,y2,color='g',alpha=.3,edgecolors='gray',label='correl')
+  plt.xlabel('correlation')
+  plt.grid(True)
+  plt.legend()
+
+  plt.show()
+
+  #+END_SRC
+
+  #+RESULTS:
+  : None
+******* 创建等高线图
+  #+BEGIN_SRC python
+  import matplotlib.pyplot as plt
+  import numpy as np
+  import matplotlib as mpl
+
+  def process_signals(x,y):
+      return (1-(x**2 + y**2))*np.exp(-y**3/3)
+
+  x = np.arange(-1.5, 1.5, 0.1)
+  y = np.arange(-1.5,1.5,0.1)
+  X,Y = np.meshgrid(x,y)
+  Z = process_signals(X,Y)
+  N = np.arange(-1, 1.5, 0.3) #作为等值线的间隔
+
+
+
+  CS = plt.contour(Z, N, linewidths = 2,cmap = mpl.cm.jet)
+  plt.clabel(CS, inline=True, fmt='%1.1f', fontsize=10) #等值线标签
+  plt.colorbar(CS)
+  plt.show()
+
+  #+END_SRC
+
+  #+RESULTS:
+  : None
+******* 3D 可视化图表
+******** 3D 柱状图
+******** 曲面图
+******** 3D 直方图
+******* 对数图
+******* 火柴杆图
+**** Javascripts 可视化工具
+***** D3
+  D3 是用于 HTML 和 SVG 的 JavaScript 数据可视化库。它旨在将数据变为现实，并强调 Web 标准，将强大的可视化技术与数据驱动的文档对象模型（DOM）操作方法相结合。D3 是 Github 上最受欢迎的数据可视化项目，在数据科学界有很好的代表性。
+***** Chart.js
+ Chart.js 是一个 HTML5 库，它通过<canvas>元素带来可视化。Chart.js 宣传自己简单灵活，互动性强，支持 6 种不同的图表类型。
+***** Leaflet
+ Leaflet 是一个 JavaScript 库，用于创建适合移动设备的交互式地图。它的代码非常小，而 Leaflet 的设计目标是简单，性能和可用性。没有开箱即用的功能？Leaflet 也可以通过一系列插件进行扩展。
+***** ECharts
+ ECharts 是一个基于浏览器的图表和可视化库。与此列表中的其他库一样，它的目的是易于使用和灵活，以及直观和高度可定制。与许多其他人一样，ECharts 是一个 JavaScript 库; 然而，它基于 zrender，一个专为 2D 图表设计的原始画布库。
+*** Personal data mining
+pic:
+[[./resources/geodata.png]]
+code:
+[[C:\Users\light\Desktop\notes\snippets\geodata]]

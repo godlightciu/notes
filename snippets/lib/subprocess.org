@@ -1,0 +1,37 @@
+* subprocess 子进程管理
+subprocess 模块允许生成新进程，连接到它们的输入/输出/错误管道，并获取它们的返回代码/结果。
+像 Linux 进程那样，一个进程可以 fork 一个子进程，并让这个子进程 exec 另外一个程序
+
+在 python 中通过 subprocess 包来 fork 一个子进程，并运行一个外部程序
+该模块旨在替换几个较旧的模块和功能
+- os.system
+- os.spawn*
+- os.popen*
+- popen2.*
+- commands.*
+
+** 创建子进程
+#+BEGIN_SRC python
+import subprocess
+retcode = subprocess.call(["dir"])
+#和 shell 中命令 ls -a 显示结果一样
+print (retcode)
+return retcode
+#+END_SRC
+
+#+RESULTS:
+
+*** subprocess.call()
+ subprocess.call(args, *, stdin=None, stdout=None, stderr=None, shell=False)
+ 父进程等待子进程完成
+ 返回退出信息（returncode）
+*** subprocess.check_call()
+ 父进程等待子进程完成
+ 返回 0
+ 检查退出信息，如果 returncode 不为 0，则举出错误 subprocess.CallProcessError
+*** subprocess.check_output()
+ 父进程等待子进程完成
+ 返回子进程向标准输出的输出结果
+ 检查退出信息，如果 returncode 不为 0，则举出错误 subprocess.CalledProcessError，该对象包含有 returncode 属性和 output 属性，output 属性为标准输出的输出结果，可用 try…except…来检查。
+** subprocess.Popen()
+subprocess.Popen(args, bufsize=0, executable=None, stdin=None, stdout=None, stderr=None, preexec_fn=None, close_fds=False, shell=False, cwd=None, env=None, universal_newlines=False, startupinfo=None, creationflags=0)

@@ -1,0 +1,141 @@
+#+LATEX_CLASS: ctexart
+* git
+** 基本概念
+*** 工作区
+电脑里的项目目录
+*** 版本库(.git)
+**** stage(index)暂存区
+**** master 分支(指向 master 的一个指针叫 HEAD)
+**** 理解
+git add 命令实际上就是把要提交的所有工作区的修改放到暂存区（Stage），然后，执行 git commit 就可以一次性把暂存区的所有修改提交到分支。
+https://cdn.liaoxuefeng.com/cdn/files/attachments/001384907720458e56751df1c474485b697575073c40ae9000/0
+https://cdn.liaoxuefeng.com/cdn/files/attachments/0013849077337835a877df2d26742b88dd7f56a6ace3ecf000/0
+*** 跟踪(track)修改
+可以理解成，git 跟踪的是每次修改动作，无论是工作区的修改动作，还是暂存区的修改动作。
+** 基本操作
+*** 初始化仓库
+    初始化一个 Git 仓库（repository），使用 git init 命令。在项目目录里会出现.git 的文件。
+*** 添加文件到 Git 仓库
+ 1. 使用命令 git add <file>，注意，可反复多次使用，添加多个文件；
+ 2. 使用命令 git commit -m <message>，完成。
+*** 不断提交修改到仓库
+ 你不断对文件进行修改，然后不断提交修改到版本库里，就好比玩 RPG 游戏时，每通过一关就会自动把游戏状态存盘，如果某一关没过去，你还可以选择读取前一关的状态。有些时候，在打 Boss 之前，你会手动存盘，以便万一打 Boss 失败了，可以从最近的地方重新开始。Git 也是一样，每当你觉得文件修改到一定程度的时候，就可以“保存一个快照”，这个快照在 Git 中被称为 commit。一旦你把文件改乱了，或者误删了文件，还可以从最近的一个 commit 恢复，然后继续工作，而不是把几个月的工作成果全部丢失。
+*** 版本回退
+- HEAD 指向的版本就是当前版本，(HEAD^是上一版本)因此，Git 允许我们在版本的历史之间穿梭，使用命令 git reset --hard commit_id。
+
+- 穿梭前，用 git log 可以查看提交历史，以便确定要回退到哪个版本。
+
+- 要重返未来，用 git reflog 查看命令历史，以便确定要回到未来的哪个版本
+*** 撤销修改
+场景 1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令 git checkout -- file(把版本库里的当前版本替换工作区的版本)。
+
+场景 2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令 git reset HEAD <file>(该命令是把暂存区的修改回退到工作区)，就回到了场景 1，第二步按场景 1 操作。
+
+场景 3：已经提交了不合适的修改到版本库时，想要撤销本次提交，参考版本回退一节，不过前提是没有推送到远程库。
+*** 删除文件
+命令 git rm 用于删除一个文件。如果一个文件已经被提交到版本库，那么你永远不用担心误删，但是要小心，你只能恢复文件到最新版本，你会丢失最近一次提交后你修改的内容。
+*** 远程仓库（github）
+**** 推送修改到远程库
+***** SSH
+1. 创建 SSH KEY:
+ssh-keygen -t rsa -C "youremail@example.com"
+无需设置密码一路回车
+可以在用户主目录里找到.ssh 目录，里面有 id_rsa 和 id_rsa.pub 两个文件，这两个就是 SSH Key 的秘钥对，id_rsa 是私钥，不能泄露出去，id_rsa.pub 是公钥，可以放心地告诉任何人。
+
+2. 登陆 GitHub，打开“Account settings”，“SSH Keys”页面：
+    然后，点“Add SSH Key”，填上任意 Title，在 Key 文本框里粘贴 id_rsa.pub 文件的内容
+***** 命令
+ 要关联一个远程库，使用命令 git remote add origin git@server-name:path/repo-name.git；
+git remote add origin git@github.com:godlightciu/example.git 
+ 关联后，使用命令 git push -u origin master 第一次推送 master 分支的所有内容；
+
+ 此后，每次本地提交后，只要有必要，就可以使用命令 git push origin master 推送最新修改；
+
+ 分布式版本系统的最大好处之一是在本地工作完全不需要考虑远程库的存在，也就是有没有联网都可以正常工作，而 SVN 在没有联网的时候是拒绝干活的！当有网络的时候，再把本地提交推送一下就完成了同步，真是太方便了！
+**** 从远程库克隆
+要克隆一个仓库，首先必须知道仓库的地址，然后使用 git clone 命令克隆。
+git clone https://github.com/godlightciu/example.git
+Git 支持多种协议，包括 https，但通过 ssh 支持的原生 git 协议速度最快。
+** 进阶操作 
+*** 分支管理
+**** 创建和合并分支
+Git 鼓励大量使用分支：
+
+查看分支：git branch
+
+创建分支：git branch <name>
+
+切换分支：git checkout <name>
+
+创建+切换分支：git checkout -b <name>
+
+合并某分支到当前分支：git merge <name>
+
+删除分支：git branch -d <name>
+**** 解决冲突
+当混帐无法自动合并分支时，就必须首先解决冲突。解决冲突后，再提交，合并完成。
+
+解决冲突就是把 Git 的合并失败的文件手动编辑为我们希望的内容，再提交。
+
+用 git log --graph 命令可以看到分支合并图产品
+**** 分支管理策略
+在实际开发中，我们应该按照几个基本原则进行分支管理：
+
+首先，master 分支应该是非常稳定的，也就是仅用来发布新版本，平时不能在上面干活；
+
+那在哪干活呢？干活都在 dev 分支上，也就是说，dev 分支是不稳定的，到某个时候，比如 1.0 版本发布时，再把 dev 分支合并到 master 上，在 master 分支发布 1.0 版本；
+
+你和你的小伙伴们每个人都在 dev 分支上干活，每个人都有自己的分支，时不时地往 dev 分支上合并就可以了。
+
+所以，团队合作的分支看起来就像这样：
+https://cdn.liaoxuefeng.com/cdn/files/attachments/001384909239390d355eb07d9d64305b6322aaf4edac1e3000/0
+小结：
+Git 分支十分强大，在团队开发中应该充分应用。
+
+合并分支时，加上--no-ff 参数就可以用普通模式合并，合并后的历史有分支，能看出来曾经做过合并，而 fast forward 合并就看不出来曾经做过合并。
+**** Bug 分支（修复 Bug）
+修复错误时，我们会通过创建新的错误分支进行修复，然后合并，最后删除;
+
+当手头工作没有完成时，工作先把现场 git stash 一下，然后去修复的 bug，修复后，再 git stash pop，回到工作现场。
+**** Feature 分支
+开发一个新 feature，最好新建一个分支；
+
+如果要丢弃一个没有被合并过的分支，可以通过 git branch -D <name>强行删除。
+**** 多人协作 
+***** 工作模式
+ 因此，多人协作的工作模式通常是这样：
+
+ 首先，试图可以用 git push origin <branch-name>推送自己的修改;
+
+ 如果推送失败，则因为远程分支比你的本地更新，先需要用 git pull 试图合并;
+
+ 如果合并有冲突，则解决冲突，并在本地提交;
+
+ 没有冲突或者解决掉冲突后，再用 git push origin <branch-name>推送就能成功！
+
+ 如果 git pull 提示 no tracking information，则说明本地分支和远程分支的链接关系没有创建，用命令 git branch --set-upstream-to <branch-name> origin/<branch-name>。
+
+ 这就是多人协作的工作模式，一旦熟悉了，就非常简单。
+***** 小结
+查看远程库信息，使用 git remote -v;
+
+本地新建的分支如果不推送到远程，对其他人就是不可见的;
+
+从本地推送分支，使用 git push origin branch-name，如果推送失败，用先 git pull 抓取远程的新提交;
+
+在本地创建和远程分支对应的分支，使用 git checkout -b branch-name origin/branch-name，本地和远程分支的名称最好一致;
+
+建立本地分支和远程分支的关联，使用 git branch --set-upstream branch-name origin/branch-name;
+
+从远程抓取分支，使用 git pull，如果有冲突，要先处理冲突。
+** 基本命令
+| git init                   | d |
+| git add                    |   |
+| git commit                 |   |
+| git reset --hard commit_id |   |
+| git log                    |   |
+| git reflog                 |   |
+| git checkout               |   |
+| git reset HEAD <FILE>      |   |
+| git rm                     |   |
+|                            |   |

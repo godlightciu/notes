@@ -1,0 +1,122 @@
+* Tensorflow
+** 简介
+ - Goole 的搜索引擎
+ - 股票价格预测
+ - 机器人学习
+ - 围棋
+ - 象棋
+ - 家庭助手
+ - 从金融到仿生
+
+ 人工神经网络：
+ 所有神经元之间的连接都是固定不可更换的, 这也就是说, 在人工神经网络里, 没有凭空产生新联结这回事.
+
+ 人工神经网络典型的一种学习方式就是, 我已经知道吃到糖果时, 手会如何动, 但是我想让神经网络学着帮我做这件动动手的事情. 所以我预先准备好非常多吃糖的学习数据, 然后将这些数据一次次放入这套人工神经网络系统中, 糖的信号会通过这套系统传递到手. 然后通过对比这次信号传递后, 手的动作是不是”讨糖”动作, 来修改人工神经网络当中的神经元强度. 这种修改在专业术语中叫做”误差反向传递”, 也可以看作是再一次将传过来的信号传回去, 看看这个负责传递信号神经元对于”讨糖”的动作到底有没有贡献, 让它好好反思与改正, 争取下次做出更好的贡献.
+
+ 人工神经网络靠的是正向和反向传播来更新神经元, 从而形成一个好的神经系统, 本质上, 这是一个能让计算机处理和优化的数学模型.
+** 梯度下降
+- 误差方程 (Cost Function). 用来计算预测出来的和我们实际中的值有多大差别. 在预测数值的问题中, 我们常用平方差 (Mean Squared Error) 来代替.
+
+- 全局最优和局部最优
+** 什么是 tensorflow
+TensorFlow 是 Google 开发的一款神经网络的 Python 外部的结构包, 也是一个采用数据流图来进行数值计算的开源软件库.TensorFlow 让我们可以先绘制计算结构图, 也可以称是一系列可人机交互的计算操作, 然后把编辑好的 Python 文件 转换成 更高效的 C++, 并在后端进行计算.
+
+TensorFlow 无可厚非地能被认定为 神经网络中最好用的库之一. 它擅长的任务就是训练深度神经网络.通过使用 TensorFlow 我们就可以快速的入门神经网络, 大大降低了深度学习（也就是深度神经网络）的开发成本和开发难度. TensorFlow 的开源性, 让所有人都能使用并且维护, 巩固它. 使它能迅速更新, 提升
+** tensorflow 结构
+tensorflow 首先要定义神经网路的结构，然后再把数据放入结构当中运算和 training
+Tensorflow 是非常重视结构的, 我们得建立好了神经网络的结构, 才能将数字放进去, 运行这个结构.
+*** 计算图纸
+ TensorFlow 是采用数据流图（data　flow　graphs）来计算,
+
+ 所以首先我们得创建一个数据流流图, 然后再将我们的数据（数据以张量(tensor)的形式存在）放在数据流图中计算.
+
+ 节点（Nodes）在图中表示数学操作,图中的线（edges）则表示在节点间相互联系的多维数据数组, 即张量（tensor).
+
+ 训练模型时 tensor 会不断的从数据流图中的一个节点 flow 到另一节点, 这就是 TensorFlow 名字的由来.
+*** Tensor 张量意义
+张量（tensor）
+- 张量有多种. 零阶张量为 纯量或标量 (scalar) 也就是一个数值. 比如 [1]
+- 一阶张量为 向量 (vector), 比如 一维的 [1, 2, 3]
+- 二阶张量为 矩阵 (matrix), 比如 二维的 [[1, 2, 3],[4, 5, 6],[7, 8, 9]]
+- 以此类推, 还有 三阶 三维的 …
+*** 搭建结构
+**** 创建数据
+#+BEGIN_SRC python
+import tensorflow as tf
+import numpy as np
+
+# create data
+x_data = np.random.rand(100).astype(np.float32)
+y_data = x_data*0.1 + 0.3
+
+#+END_SRC
+**** 搭建模型
+接着, 我们用 tf.Variable 来创建描述 y 的参数. 我们可以把 y_data = x_data*0.1 + 0.3 想象成 y=Weights * x + biases, 然后神经网络也就是学着把 Weights 变成 0.1, biases 变成 0.3.
+#+BEGIN_SRC python
+Weights = tf.Variable(tf.random_uniform([1], -1.0, 1.0))
+biases = tf.Variable(tf.zeros([1]))
+
+y = Weights*x_data + biases
+
+#+END_SRC
+**** 计算误差
+#+BEGIN_SRC python
+loss = tf.reduce_mean(tf.square(y-y_data))
+
+#+END_SRC
+**** 传播误差
+反向传递误差的工作就教给 optimizer 了, 我们使用的误差传递方法是梯度下降法: Gradient Descent 让后我们使用 optimizer 来进行参数的更新.
+#+BEGIN_SRC python
+optimizer = tf.train.GradientDescentOptimizer(0.5)
+train = optimizer.minimize(loss)
+
+#+END_SRC
+**** 训练
+到目前为止, 我们只是建立了神经网络的结构, 还没有使用这个结构. 在使用这个结构之前, 我们必须先初始化所有之前定义的 Variable, 所以这一步是很重要的!
+#+BEGIN_SRC python
+# init = tf.initialize_all_variables() # tf 马上就要废弃这种写法
+init = tf.global_variables_initializer()  # 替换成这样就好
+
+#接着创建回话 Session
+#我们用 Session 来执行 init 初始化步骤. 并且, 用 Session 来 run 每一次 training 的数据. 逐步提升神经网络的预测准确性.
+sess = tf.Session()
+sess.run(init)          # Very important
+
+for step in range(201):
+    sess.run(train)
+    if step % 20 == 0:
+        print(step, sess.run(Weights), sess.run(biases))
+#+END_SRC
+*** Session 会话控制
+Session 是 Tensorflow 为了控制,和输出文件的执行的语句. 运行 session.run() 可以获得你要得知的运算结果, 或者是你所要运算的部分.
+
+首先，我们这次需要加载 Tensorflow，然后建立两个 matrix ,输出两个 matrix 矩阵相乘的结果。
+#+BEGIN_SRC python
+import tensorflow as tf
+
+# create two matrixes
+
+matrix1 = tf.constant([[3,3]])
+matrix2 = tf.constant([[2],
+                       [2]])
+product = tf.matmul(matrix1,matrix2)
+
+#+END_SRC
+因为 product 不是直接计算的步骤, 所以我们会要使用 Session 来激活 product 并得到计算结果. 有两种形式使用会话控制 Session。
+
+#+BEGIN_SRC python
+# method 1
+sess = tf.Session()
+result = sess.run(product)
+print(result)
+sess.close()
+# [[12]]
+
+# method 2
+with tf.Session() as sess:
+    result2 = sess.run(product)
+    print(result2)
+# [[12]]
+
+#+END_SRC
+*** Variable 变量
