@@ -46,7 +46,7 @@ ssh-keygen -t rsa -C "youremail@example.com"
     然后，点“Add SSH Key”，填上任意 Title，在 Key 文本框里粘贴 id_rsa.pub 文件的内容
 ***** 命令
  要关联一个远程库，使用命令 git remote add origin git@server-name:path/repo-name.git；
-git remote add origin git@github.com:godlightciu/example.git 
+git remote add origin git@github.com:godlightciu/example.git
  关联后，使用命令 git push -u origin master 第一次推送 master 分支的所有内容；
 
  此后，每次本地提交后，只要有必要，就可以使用命令 git push origin master 推送最新修改；
@@ -56,7 +56,7 @@ git remote add origin git@github.com:godlightciu/example.git
 要克隆一个仓库，首先必须知道仓库的地址，然后使用 git clone 命令克隆。
 git clone https://github.com/godlightciu/example.git
 Git 支持多种协议，包括 https，但通过 ssh 支持的原生 git 协议速度最快。
-** 进阶操作 
+** 进阶操作
 *** 分支管理
 **** 创建和合并分支
 Git 鼓励大量使用分支：
@@ -93,15 +93,19 @@ https://cdn.liaoxuefeng.com/cdn/files/attachments/001384909239390d355eb07d9d6430
 Git 分支十分强大，在团队开发中应该充分应用。
 
 合并分支时，加上--no-ff 参数就可以用普通模式合并，合并后的历史有分支，能看出来曾经做过合并，而 fast forward 合并就看不出来曾经做过合并。
-**** Bug 分支（修复 Bug）
+**** Bug 分支（stash）
 修复错误时，我们会通过创建新的错误分支进行修复，然后合并，最后删除;
 
 当手头工作没有完成时，工作先把现场 git stash 一下，然后去修复的 bug，修复后，再 git stash pop，回到工作现场。
+
+对于git stash的进阶操作，你可以使用git stash save "meg" 命令保存当前的工作区。通过“mes“自定信息为你的stash标记，然后可以
+通过git stash list 命令查看当前stash列表。当完成bug修复工作后，通过自定义信息检索你要应用的stash，使用git stash apply
+命令回到工作区，继续愉快地编码了。
 **** Feature 分支
 开发一个新 feature，最好新建一个分支；
 
 如果要丢弃一个没有被合并过的分支，可以通过 git branch -D <name>强行删除。
-**** 多人协作 
+**** 多人协作
 ***** 工作模式
  因此，多人协作的工作模式通常是这样：
 
